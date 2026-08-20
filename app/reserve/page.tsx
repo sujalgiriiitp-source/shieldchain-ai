@@ -1,0 +1,12 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import ReserveChart from "@/components/ReserveChart";
+
+type ReserveData = { gapMbd: number; daysUntilSprExhausted: number | null; points: { day: number; sprDaysRemaining: number }[] };
+export default function ReservePage() {
+  const [coverage, setCoverage] = useState(50); const [data, setData] = useState<ReserveData | null>(null); const fullGap = 2.39; const sprGap = fullGap * coverage / 100;
+  useEffect(() => { let active = true; fetch(`/api/reserve?gapMbd=${sprGap}`).then((response) => response.json() as Promise<ReserveData>).then((result) => { if (active) setData(result); }); return () => { active = false; }; }, [sprGap]);
+  return <div className="space-y-6"><div><p className="text-sm font-semibold uppercase tracking-wider text-blue-700">Reserve optimizer</p><h1 className="mt-1 text-3xl font-bold">Measure the SPR buffer.</h1><p className="mt-2 text-slate-600">Model how much of an illustrative 2.39 mbd import gap is covered by strategic reserve drawdown versus price pass-through.</p></div><section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"><label className="block font-medium">Gap covered by SPR drawdown: <span className="text-blue-700">{coverage}%</span><input className="mt-3 w-full accent-blue-700" type="range" min="0" max="100" value={coverage} onChange={(event) => setCoverage(Number(event.target.value))} /></label><div className="mt-4 grid gap-3 sm:grid-cols-3"><Metric label="SPR drawdown rate" value={`${sprGap.toFixed(2)} mbd`} /><Metric label="Price pass-through" value={`${(100 - coverage)}%`} /><Metric label="Estimated exhaustion" value={data?.daysUntilSprExhausted === null ? "No drawdown" : data ? `${data.daysUntilSprExhausted.toFixed(1)} days` : "Calculating…"} /></div></section>{data && <ReserveChart points={data.points} />}<p className="text-xs leading-5 text-slate-500">Illustrative model using public-data proxies — multipliers are adjustable assumptions, not calibrated forecasts.</p></div>;
+}
+function Metric({ label, value }: { label: string; value: string }) { return <div className="rounded-lg bg-slate-50 p-3"><p className="text-xs text-slate-500">{label}</p><p className="mt-1 text-lg font-bold">{value}</p></div>; }

@@ -1,0 +1,17 @@
+{
+  "hormuz": [
+    { "date": "2026-02-28", "headline": "US and Israeli forces strike Iran; Iran retaliates and threatens to close the Strait of Hormuz to shipping." },
+    { "date": "2026-03-02", "headline": "Iran's Revolutionary Guard blocks routine commercial transits through Hormuz; major shipping lines suspend crossings." },
+    { "date": "2026-04-13", "headline": "US begins a naval blockade of Iranian ports as the conflict continues." },
+    { "date": "2026-05-20", "headline": "Over 1,500 vessels reported stranded near the strait, with more than 20,000 mariners affected." },
+    { "date": "2026-06-17", "headline": "A US-Iran memorandum of understanding reopens the strait toll-free, though traffic stays well below normal." },
+    { "date": "2026-07-05", "headline": "Attacks on commercial vessels resume; the strait is once again effectively closed to routine shipping." },
+    { "date": "2026-07-23", "headline": "Daily transits through the strait fall to roughly 10 vessels, against a pre-crisis baseline of 88-130 per day." },
+    { "date": "2026-08-15", "headline": "A tanker affiliated with UAE's state oil company ADNOC is attacked while transiting the strait; Iran is blamed." }
+  ],
+  "red_sea": [
+    { "date": "2026-02-28", "headline": "Houthi forces resume attacks on Red Sea shipping as regional tensions escalate, reversing gains made since the October 2025 ceasefire." },
+    { "date": "2026-08-15", "headline": "A separate Houthi attack forces the closure of a strategic port in Yemen, adding to Red Sea route disruption." }
+  ]
+}
+

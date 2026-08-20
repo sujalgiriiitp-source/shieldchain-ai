@@ -1,0 +1,16 @@
+{
+  "daily_consumption_mbd": 5.3,
+  "import_dependency_pct": 88,
+  "spr_days_of_cover": 9.5,
+  "hormuz_share_pre_crisis_pct": 45,
+  "hormuz_share_crisis_low_pct": 30,
+  "source_countries_count": 40,
+  "refineries": [
+    { "name": "Jamnagar", "operator": "Reliance", "lat": 22.34, "lng": 69.83 },
+    { "name": "Vadinar", "operator": "Nayara Energy", "lat": 22.47, "lng": 69.7 },
+    { "name": "Mundra", "operator": "Multiple (VLCC terminal commissioned Jan 2026)", "lat": 22.84, "lng": 69.7 },
+    { "name": "Paradip", "operator": "IOCL", "lat": 20.31, "lng": 86.61 }
+  ],
+  "note": "Figures are approximate, drawn from public reporting Feb-Aug 2026, for demo purposes only — not for real trading or policy decisions."
+}
+

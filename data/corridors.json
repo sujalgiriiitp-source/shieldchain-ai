@@ -1,0 +1,7 @@
+[
+  { "id": "hormuz", "name": "Strait of Hormuz", "lat": 26.57, "lng": 56.25, "baseline_daily_transit_mbd": 20.9, "world_oil_share_pct": 20, "status_note": "Effectively closed to routine commercial shipping since 28 Feb 2026; a brief mid-June reopening broke down in early July." },
+  { "id": "red_sea", "name": "Red Sea / Bab-el-Mandeb", "lat": 12.5, "lng": 43.4, "baseline_daily_transit_mbd": 6.2, "world_oil_share_pct": 6, "status_note": "Operating at reduced capacity due to recurring attacks on shipping; disrupted further as the Hormuz crisis deepened." },
+  { "id": "cape_route", "name": "Cape of Good Hope reroute", "lat": -34.35, "lng": 18.47, "baseline_daily_transit_mbd": 0, "world_oil_share_pct": 0, "status_note": "Longer alternative route used by tankers avoiding Red Sea/Hormuz risk; adds 10-14 transit days." },
+  { "id": "suez", "name": "Suez Canal", "lat": 30.6, "lng": 32.3, "baseline_daily_transit_mbd": 5.5, "world_oil_share_pct": 5, "status_note": "Traffic tied to Red Sea approach risk; volumes fluctuate with attack activity." }
+]
+

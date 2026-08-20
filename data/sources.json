@@ -1,0 +1,9 @@
+[
+  { "id": "saudi_pipeline", "name": "Saudi Arabia (East-West Pipeline to Yanbu)", "bypasses_hormuz": true, "capacity_mbd": 5.0, "spare_capacity_mbd": 1.8, "extra_transit_days_vs_hormuz_baseline": 2, "cost_premium_pct": 4, "notes": "Bypasses Hormuz entirely via Red Sea port of Yanbu." },
+  { "id": "uae_pipeline", "name": "UAE (Habshan-Fujairah Pipeline)", "bypasses_hormuz": true, "capacity_mbd": 1.5, "spare_capacity_mbd": 0.8, "extra_transit_days_vs_hormuz_baseline": 1, "cost_premium_pct": 3, "notes": "Bypasses Hormuz via a Gulf of Oman terminal at Fujairah." },
+  { "id": "russia_urals", "name": "Russia (Urals / ESPO)", "bypasses_hormuz": true, "capacity_mbd": 1.7, "spare_capacity_mbd": 0.6, "extra_transit_days_vs_hormuz_baseline": 12, "cost_premium_pct": -8, "notes": "Discounted crude; capped by sanctions exposure and tariff risk." },
+  { "id": "us_gulf", "name": "United States (Gulf Coast)", "bypasses_hormuz": true, "capacity_mbd": 0.5, "spare_capacity_mbd": 0.3, "extra_transit_days_vs_hormuz_baseline": 18, "cost_premium_pct": 12, "notes": "Long transit; higher freight costs." },
+  { "id": "west_africa", "name": "West Africa (Nigeria, Angola)", "bypasses_hormuz": true, "capacity_mbd": 0.4, "spare_capacity_mbd": 0.25, "extra_transit_days_vs_hormuz_baseline": 16, "cost_premium_pct": 10, "notes": "Light, sweet crude; long transit." },
+  { "id": "venezuela", "name": "Venezuela (Merey-16, via Sikka port)", "bypasses_hormuz": true, "capacity_mbd": 0.3, "spare_capacity_mbd": 0.15, "extra_transit_days_vs_hormuz_baseline": 20, "cost_premium_pct": 6, "notes": "Heavy crude; usable only by complex refineries." }
+]
+
