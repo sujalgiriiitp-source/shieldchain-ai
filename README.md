@@ -56,7 +56,7 @@ Adjust the share of the illustrative gap met by SPR drawdown rather than price p
 
 ## Assumptions & limitations
 
-Risk scoring uses seeded, illustrative headlines rather than a live paid news feed. The economic model uses clearly labeled illustrative multipliers, not a calibrated econometric model. Gemini’s free tier has a daily request cap, so this project caches risk results and includes hardcoded fallbacks for all LLM-backed endpoints.
+Risk scoring uses seeded, illustrative headlines rather than a live paid news feed. The economic model uses clearly labeled illustrative multipliers, not a calibrated econometric model. Scenario supply gaps are India-level proxies: Hormuz applies India’s seeded 45% pre-crisis share of imported crude; other through-routes are scaled from that exposure using seeded global-share ratios and capped at India’s imported-crude requirement. The combined Hormuz + Red Sea preset allocates Red Sea exposure only from the non-Hormuz import basket to avoid double-counting. Gemini’s free tier has a daily request cap, so this project caches risk results and includes hardcoded fallbacks for all LLM-backed endpoints.
 
 ## What we’d build with more time
 

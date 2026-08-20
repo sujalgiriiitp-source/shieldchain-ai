@@ -20,5 +20,8 @@ export interface ScenarioResult {
   daysUntilSprExhausted: number | null;
   assumptions: Record<string, number>;
   combined?: boolean;
+  indiaImportsMbd?: number;
+  exposureProxyMbd?: number;
+  exposureModel?: string;
+  corridorContributions?: { corridorId: string; exposureMbd: number; gapMbd: number }[];
 }
-
