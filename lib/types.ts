@@ -3,7 +3,7 @@ export type RiskFlag = "low" | "medium" | "high";
 
 export interface RiskScore {
   corridor: string;
-  risk_score: number;
+  risk_score: number | null;
   trend: Trend;
   rationale: string;
   confidence: "low" | "medium" | "high";

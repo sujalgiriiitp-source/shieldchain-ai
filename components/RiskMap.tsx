@@ -5,8 +5,8 @@ import corridors from "@/data/corridors.json";
 import baseline from "@/data/india_baseline.json";
 import type { RiskScore } from "@/lib/types";
 
-function markerColor(score?: number) {
-  if (score === undefined) return "#94a3b8";
+function markerColor(score?: number | null) {
+  if (score === undefined || score === null) return "#94a3b8";
   if (score < 20) return "#16a34a";
   if (score <= 60) return "#d97706";
   return "#dc2626";
@@ -21,7 +21,7 @@ export default function RiskMap({ risks }: { risks: RiskScore[] | null }) {
         {corridors.map((corridor) => {
           const risk = byName.get(corridor.name);
           return <CircleMarker key={corridor.id} center={[corridor.lat, corridor.lng]} radius={Math.max(8, corridor.world_oil_share_pct * 1.15)} pathOptions={{ color: markerColor(risk?.risk_score), fillColor: markerColor(risk?.risk_score), fillOpacity: 0.72, weight: 2 }}>
-            <Popup><strong>{corridor.name}</strong><br />{risk ? `Risk score: ${risk.risk_score}/100` : "Loading risk score…"}<br /><span>{corridor.status_note}</span></Popup>
+            <Popup><strong>{corridor.name}</strong><br />{risk?.risk_score === null ? "Risk score unavailable" : risk ? `Risk score: ${risk.risk_score}/100` : "Loading risk score…"}<br /><span>{corridor.status_note}</span></Popup>
           </CircleMarker>;
         })}
         {baseline.refineries.map((refinery) => (
@@ -33,4 +33,3 @@ export default function RiskMap({ risks }: { risks: RiskScore[] | null }) {
     </div>
   );
 }
-

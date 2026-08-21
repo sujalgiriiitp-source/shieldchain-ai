@@ -8,7 +8,7 @@ export async function GET() {
   const live = await getLiveData();
   const result = Object.values(live.corridorRisk).map((risk): RiskScore => ({
     corridor: risk.label,
-    risk_score: risk.score ?? 0,
+    risk_score: risk.score,
     trend: "stable",
     rationale: risk.reason,
     confidence: risk.status === "LIVE" ? "medium" : "low",

@@ -1,9 +1,10 @@
-export type DataStatus = "LIVE" | "STALE" | "UNAVAILABLE" | "ILLUSTRATIVE";
+export type DataStatus = "LIVE" | "STALE" | "UNAVAILABLE" | "ERROR" | "ILLUSTRATIVE";
+export type AnalysisStatus = "LIVE" | "FALLBACK" | "UNAVAILABLE";
 export type CorridorKey = "hormuz" | "redSea" | "babElMandeb" | "gulfOfOman" | "capeRoute" | "suez";
 
 export interface SourceStatus {
   name: "GDELT" | "EIA" | "Gemini";
-  status: DataStatus;
+  status: DataStatus | AnalysisStatus;
   updatedAt: string | null;
   freshness: string;
 }
@@ -34,6 +35,7 @@ export interface CorridorRisk {
   source: "GDELT";
   timestamp: string | null;
   reason: string;
+  confidence: number;
 }
 
 export interface CrudePrice {
@@ -61,7 +63,6 @@ export interface LiveDataResponse {
   geopoliticalRisk: Record<"hormuz" | "redSea" | "babElMandeb" | "gulfOfOman", CorridorRisk>;
   corridorRisk: Record<"hormuz" | "redSea" | "capeRoute" | "suez", CorridorRisk>;
   events: EventSignal[];
-  gemini: { status: DataStatus; generatedAt: string | null; analysis: GeminiAnalysis | null };
+  gemini: { status: AnalysisStatus; generatedAt: string | null; analysis: GeminiAnalysis | null };
   dataQuality: { liveSources: number; staleSources: number; unavailableSources: number };
 }
-

@@ -1,76 +1,130 @@
 # ShieldChain AI
 
-ShieldChain AI is a live risk-to-recommendation pipeline for India’s crude-oil supply chain, built for OOSC 4.0 Hackathon, IIIT Allahabad (Problem Statement 1). It replays the 2026 Strait of Hormuz crisis: routine commercial shipping has been effectively closed since 28 February 2026, with a short June reopening failing in July; India, which imports roughly 88% of its crude and historically routed 41–52% through Hormuz, has responded by diversifying sourcing. The demo shows the operational exposure of a 9.5-day strategic reserve buffer and turns disruption into response options.
+ShieldChain AI is a competition-ready decision-support prototype for India’s crude-oil supply-chain resilience, built by HackShield for OOSC 4.0 Hackathon, IIIT Allahabad. It connects live signals, an India-level exposure model, disruption scenarios, indicative rerouting options, and a strategic petroleum reserve (SPR) model without presenting assumptions as official forecasts.
+
+## Problem
+
+India imports most of its crude oil and is exposed to disruption in key maritime corridors. During a disruption, decision-makers need a transparent way to distinguish observed signals from model assumptions and turn them into a tested response path.
+
+## Solution
+
+The product follows one connected decision chain: live signals → corridor risk → India exposure → scenario supply gap → illustrative economic impact → procurement options → SPR response → recommended action.
+
+## Key Features
+
+- Live-source status, freshness, provenance, and manual refresh
+- GDELT event-signal risk normalization with LIVE / STALE / UNAVAILABLE handling
+- EIA WTI market context when an EIA key is configured
+- Server-only Gemini analysis with deterministic fallback
+- India-level Hormuz exposure model and combined-route cap
+- Scenario comparison, sensitivity sliders, procurement explainability, and SPR drawdown chart
 
 ## Architecture
 
-Static public-data seed files → Gemini-backed risk agent (with cached hardcoded fallbacks) → scenario modeller and reserve optimizer → Gemini-backed procurement orchestrator (with deterministic fallback) → dashboard, map, charts, and decision views. Gemini calls remain server-side; economic and reserve calculations are instant local TypeScript calculations.
+```mermaid
+flowchart LR
+  A["Live data sources: GDELT + EIA"] --> B["Validation + cache"]
+  B --> C["Risk engine"]
+  C --> D["Scenario engine"]
+  D --> E["Procurement engine"]
+  E --> F["Reserve optimizer"]
+  B --> G["Gemini analysis layer"]
+  D --> H["Decision support UI"]
+```
 
-## Tech stack
+## Data Sources
 
-- Next.js 14, App Router, TypeScript, Tailwind CSS
-- React Leaflet + OpenStreetMap tiles for the no-key corridor map
-- Recharts for the SPR depletion visualization
-- Google Gemini API (`gemini-2.5-flash`) through `@google/genai`
-- GDELT DOC 2.0 for public, recent event/news signals
-- U.S. EIA API v2 for the most recent available WTI crude-price observation (optional key)
+- **GDELT DOC 2.0:** public geopolitical and shipping-related event signals. Cached for one hour.
+- **U.S. EIA API v2:** latest available WTI petroleum observation. Cached for five minutes.
+- **Seeded public-data inputs:** Indian import dependence, reserve cover, exposure shares, and indicative routing capacities.
 
-The Gemini API free tier is used because it needs no billing account, keeps the demo zero-cost, and has hardcoded fallbacks plus a five-minute risk cache so missing keys, network failures, and daily free-tier caps cannot break a judge demo.
+The dashboard labels each source as `LIVE`, `STALE`, `UNAVAILABLE`, `ERROR`, or `FALLBACK` where applicable. Cached results are never represented as fresh live data.
 
-## Setup & run
+## AI Layer
+
+Gemini is used only server-side to analyze structured backend evidence. It is an analysis layer, not a source of physical-world facts. Available Gemini models are discovered against the configured API key at runtime. If Gemini is unavailable, a deterministic recommendation fallback is used and labeled accordingly.
+
+## Scenario Engine
+
+Hormuz exposure is calculated from India’s imported-crude requirement and seeded 45% pre-crisis Hormuz share—not global Hormuz transit volume. Other route proxies are capped within India’s import basket, and the Hormuz + Red Sea scenario avoids double-counting. Outputs are **decision-support estimates**.
+
+## Procurement Engine
+
+Recommendations rank indicative source/routing options by spare capacity, cost premium, transit time, and available risk signals. Routing/capacity values are illustrative decision-support estimates, not cargo offers.
+
+## Reserve Optimizer
+
+The SPR page models drawdown share, gap remaining, and estimated exhaustion using the scenario gap. It is an **illustrative model**, never a statement of official reserve levels.
+
+## Data Reliability / Fallbacks
+
+- Provider calls have timeout, validation, and independent caching boundaries.
+- A failed refresh with cache returns `STALE` data and its successful timestamp.
+- A failed refresh without cache returns `UNAVAILABLE`; it never creates a zero-risk value.
+- `/api/live` always returns HTTP 200 with a normalized usable payload, even if providers fail.
+
+## Technology Stack
+
+Next.js 14 App Router, TypeScript, Tailwind CSS, React Leaflet, Recharts, `@google/genai`, GDELT DOC API, and EIA API v2.
+
+## Local Setup
 
 ```bash
 npm install
-cp .env.local.example .env.local
-```
-
-Get a free Gemini API key at [Google AI Studio](https://aistudio.google.com/apikey): sign in, choose **Create API key**, and paste it into `.env.local`. To enable the EIA market-price input, get an EIA key from [EIA Open Data](https://www.eia.gov/opendata/) and add both values:
-
-```env
-GEMINI_API_KEY=your_key_here
-EIA_API_KEY=your_key_here
-```
-
-GDELT needs no key. Gemini and EIA keys stay server-side and must never be named with a `NEXT_PUBLIC_` prefix. The app still works without either key using its clearly labeled deterministic fallback.
-
-```bash
+cp .env.example .env.local
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open `http://localhost:3000`.
 
-## Feature walkthrough
+## Environment Variables
 
-### Dashboard
+```env
+EIA_API_KEY=
+GEMINI_API_KEY=
+GDELT_ENABLED=true
+```
 
-The dashboard pairs a 30-second-refreshing corridor risk ticker with a Leaflet map. It marks Hormuz, Red Sea, Suez, and Cape routing exposure alongside India’s refinery hubs, then offers a one-click replay of the February 2026 Hormuz closure.
+`EIA_API_KEY` and `GEMINI_API_KEY` are server-only. Never use a `NEXT_PUBLIC_` prefix and never commit `.env.local`.
 
-### Scenario modeller
+## API Endpoints
 
-Choose one of three presets or configure a corridor, capacity loss, and duration manually. The page calculates supply gap, price and freight impact, illustrative GDP impact, and SPR exhaustion timing. Assumption sliders make the proxy multipliers visible and adjustable before handing the gap to procurement.
+- `GET /api/live` — normalized source state, market context, risk signals, events, and Gemini analysis
+- `GET /api/live?refresh=1` — attempts a provider refresh while preserving stale fallback behavior
+- `POST /api/scenario` — deterministic India-level scenario calculation
+- `POST /api/procurement` — indicative procurement ranking and analysis/fallback
+- `GET /api/reserve?gapMbd=` — illustrative SPR depletion curve
+- `GET /api/risk-score` — normalized corridor risk compatibility endpoint
 
-### Procurement orchestrator
+## Screenshots
 
-This page ranks alternative crude options by capacity, cost, transit time, and risk, then supplies a plain-language six-hour action summary. Gemini provides contextual strategy where available; a cost-aware greedy allocation always takes over if the API cannot respond.
+Run the application locally and capture the Dashboard, Scenario, Procurement, and Reserve pages. The live status panel intentionally shows real provider freshness rather than mocked screenshots.
 
-### Reserve optimizer
+## Demo Flow
 
-Adjust the share of the illustrative gap met by SPR drawdown rather than price pass-through. The reserve chart redraws the projected days of cover from day 0 through day 20.
+1. Open Dashboard and point out data provenance and corridor-risk confidence.
+2. Click **Replay disruption**.
+3. Inspect the India-level exposure, impact, sensitivity analysis, and decision chain.
+4. Click **Send to procurement orchestrator**.
+5. Explain the ranked basket and **Why this recommendation?** panel.
+6. Open Reserve and evaluate SPR contribution and remaining gap.
 
-## Assumptions & limitations
+## Model Assumptions
 
-The dashboard’s GDELT event signals, EIA price observation, and Gemini analysis layer are explicitly labeled LIVE, STALE, or UNAVAILABLE. GDELT events are cached for one hour; EIA market data and Gemini analysis for five minutes. Failed refreshes serve the last successful response as STALE; without a cached response the UI shows UNAVAILABLE, never invented values. Gemini is an analysis layer—not a source of physical-world facts. The economic model uses clearly labeled illustrative multipliers, not a calibrated econometric model. Scenario supply gaps are India-level proxies: Hormuz applies India’s seeded 45% pre-crisis share of imported crude; other through-routes are scaled from that exposure using seeded global-share ratios and capped at India’s imported-crude requirement. The combined Hormuz + Red Sea preset allocates Red Sea exposure only from the non-Hormuz import basket to avoid double-counting.
+India import exposure, SPR cover, and corridor baseline are public-data inputs. Price elasticity, freight premium, GDP sensitivity, and routing capacity are illustrative assumptions. All calculated impacts are model outputs. They are not official forecasts, cargo offers, or policy guidance.
 
-## What we’d build with more time
+## Limitations
 
-- Live GDELT integration
-- Real freight-rate APIs
-- A calibrated econometric model
-- Multi-country expansion
-- A paid API tier for higher throughput
+GDELT is a news/event signal rather than a verified shipping-position feed. EIA WTI is market context, not India delivered crude pricing. The economic multipliers and routing capacities are transparent proxies. Free-tier provider availability can vary.
 
-## Team
+## Future Roadmap
 
-HackShield — Sujal Giri, Shambhunath Institute of Engineering & Technology, Prayagraj
+Add verified freight and vessel-position feeds, refinery crude-slate constraints, real cargo availability integrations, calibrated econometrics, multi-country exposure, and durable distributed caching.
 
-Teammate: _add name here_
+## Contributing
+
+Open an issue or submit a focused pull request. Preserve the source-status semantics and never add secrets or fabricated live data.
+
+## License
+
+Add the team’s preferred open-source license before public release.
