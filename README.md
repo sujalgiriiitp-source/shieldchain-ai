@@ -12,6 +12,8 @@ Static public-data seed files → Gemini-backed risk agent (with cached hardcode
 - React Leaflet + OpenStreetMap tiles for the no-key corridor map
 - Recharts for the SPR depletion visualization
 - Google Gemini API (`gemini-2.5-flash`) through `@google/genai`
+- GDELT DOC 2.0 for public, recent event/news signals
+- U.S. EIA API v2 for the most recent available WTI crude-price observation (optional key)
 
 The Gemini API free tier is used because it needs no billing account, keeps the demo zero-cost, and has hardcoded fallbacks plus a five-minute risk cache so missing keys, network failures, and daily free-tier caps cannot break a judge demo.
 
@@ -22,13 +24,14 @@ npm install
 cp .env.local.example .env.local
 ```
 
-Get a free Gemini API key at [Google AI Studio](https://aistudio.google.com/apikey): sign in, choose **Create API key**, and paste it into `.env.local`:
+Get a free Gemini API key at [Google AI Studio](https://aistudio.google.com/apikey): sign in, choose **Create API key**, and paste it into `.env.local`. To enable the EIA market-price input, get an EIA key from [EIA Open Data](https://www.eia.gov/opendata/) and add both values:
 
 ```env
 GEMINI_API_KEY=your_key_here
+EIA_API_KEY=your_key_here
 ```
 
-No credit card or payment method is required. The app still works without a key using the built-in demo-safe fallbacks.
+GDELT needs no key. Gemini and EIA keys stay server-side and must never be named with a `NEXT_PUBLIC_` prefix. The app still works without either key using its clearly labeled deterministic fallback.
 
 ```bash
 npm run dev
@@ -56,7 +59,7 @@ Adjust the share of the illustrative gap met by SPR drawdown rather than price p
 
 ## Assumptions & limitations
 
-Risk scoring uses seeded, illustrative headlines rather than a live paid news feed. The economic model uses clearly labeled illustrative multipliers, not a calibrated econometric model. Scenario supply gaps are India-level proxies: Hormuz applies India’s seeded 45% pre-crisis share of imported crude; other through-routes are scaled from that exposure using seeded global-share ratios and capped at India’s imported-crude requirement. The combined Hormuz + Red Sea preset allocates Red Sea exposure only from the non-Hormuz import basket to avoid double-counting. Gemini’s free tier has a daily request cap, so this project caches risk results and includes hardcoded fallbacks for all LLM-backed endpoints.
+The dashboard’s GDELT event signals, EIA price observation, and Gemini analysis layer are explicitly labeled LIVE, STALE, or UNAVAILABLE. GDELT events are cached for one hour; EIA market data and Gemini analysis for five minutes. Failed refreshes serve the last successful response as STALE; without a cached response the UI shows UNAVAILABLE, never invented values. Gemini is an analysis layer—not a source of physical-world facts. The economic model uses clearly labeled illustrative multipliers, not a calibrated econometric model. Scenario supply gaps are India-level proxies: Hormuz applies India’s seeded 45% pre-crisis share of imported crude; other through-routes are scaled from that exposure using seeded global-share ratios and capped at India’s imported-crude requirement. The combined Hormuz + Red Sea preset allocates Red Sea exposure only from the non-Hormuz import basket to avoid double-counting.
 
 ## What we’d build with more time
 
