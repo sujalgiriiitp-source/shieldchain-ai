@@ -5,8 +5,8 @@ import type { LiveDataResponse } from "@/lib/live-data";
 import type { RiskScore } from "@/lib/types";
 
 const arrow = { rising: "↑", stable: "→", falling: "↓" };
-const tone = (score: number | null) => score === null ? "bg-slate-200 text-slate-700" : score > 60 ? "bg-red-100 text-red-800" : score >= 20 ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800";
-const statusTone = { LIVE: "bg-emerald-100 text-emerald-800", STALE: "bg-amber-100 text-amber-800", UNAVAILABLE: "bg-slate-200 text-slate-700", ERROR: "bg-red-100 text-red-800", ILLUSTRATIVE: "bg-blue-100 text-blue-800", FALLBACK: "bg-blue-100 text-blue-800" };
+const tone = (score: number | null) => score === null ? "border-slate-200 bg-slate-100 text-slate-700" : score > 60 ? "border-red-200 bg-red-50 text-red-800" : score >= 20 ? "border-amber-200 bg-amber-50 text-amber-800" : "border-emerald-200 bg-emerald-50 text-emerald-800";
+const statusTone: Record<string, string> = { LIVE: "border-emerald-200 bg-emerald-50 text-emerald-800", STALE: "border-amber-200 bg-amber-50 text-amber-800", UNAVAILABLE: "border-slate-200 bg-slate-100 text-slate-700", ERROR: "border-red-200 bg-red-50 text-red-800", ILLUSTRATIVE: "border-blue-200 bg-blue-50 text-blue-800", FALLBACK: "border-blue-200 bg-blue-50 text-blue-800" };
 
 export default function RiskTicker({ onRisks, onLiveData }: { onRisks?: (risks: RiskScore[]) => void; onLiveData?: (data: LiveDataResponse) => void }) {
   const [risks, setRisks] = useState<RiskScore[]>([]);
@@ -29,18 +29,18 @@ export default function RiskTicker({ onRisks, onLiveData }: { onRisks?: (risks: 
     const id = window.setInterval(() => load(), 5 * 60_000);
     return () => window.clearInterval(id);
   }, [load]);
-  return <section className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm" aria-label="Current corridor risk ticker">
-    <div className="flex flex-wrap items-center gap-2">
-      <span className="mr-2 text-xs font-bold uppercase tracking-wider text-slate-500">Live data</span>
-      {live && <span className={`rounded-full px-3 py-1 text-xs font-bold ${statusTone[live.status]}`}>● {live.status}</span>}
-      <span className="text-xs text-slate-500">Auto-refresh: ON · every 5 min</span>
-      <button onClick={() => load(true)} disabled={fetching} className="ml-auto rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60">{fetching ? "Fetching live signals…" : "Refresh live data"}</button>
+  return <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm" aria-label="Current corridor risk ticker">
+    <div className="flex flex-wrap items-center gap-3 border-b border-slate-100 bg-slate-50/80 px-4 py-3">
+      <span className="mr-1 text-xs font-bold uppercase tracking-[0.16em] text-slate-600">Live intelligence</span>
+      {live && <span className={`rounded-full border px-3 py-1 text-xs font-bold ${statusTone[live.status]}`}>● {live.status}</span>}
+      <span className="text-xs text-slate-500">Auto-refresh active · every 5 min</span>
+      <button onClick={() => load(true)} disabled={fetching} className="ml-auto rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 disabled:cursor-wait disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">{fetching ? "Fetching live signals…" : "Refresh live data"}</button>
     </div>
-    <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3">
-      <span className="mr-2 text-xs font-bold uppercase tracking-wider text-slate-500">Corridor risk</span>
-      {risks.map((risk) => <span key={risk.corridor} className={`rounded-full px-3 py-1 text-xs font-semibold ${tone(risk.risk_score)}`}>{risk.corridor}: {risk.risk_score === null ? "UNAVAILABLE" : `${risk.risk_score} ${arrow[risk.trend]}`}</span>)}
+    <div className="flex flex-wrap items-center gap-2 px-4 py-3">
+      <span className="mr-2 text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Corridor risk</span>
+      {risks.map((risk) => <span key={risk.corridor} className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${tone(risk.risk_score)}`}><span className="font-bold">{risk.corridor}</span>: {risk.risk_score === null ? "UNAVAILABLE" : `${risk.risk_score} ${arrow[risk.trend]}`}</span>)}
       {!risks.length && <span className="text-sm text-slate-500">{error ? "Live data is unavailable; retry manually." : "Fetching live signals…"}</span>}
     </div>
-    {live && <p className="mt-3 text-xs text-slate-500">Last updated: {new Date(live.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} · Data freshness: {live.dataQuality.liveSources} live, {live.dataQuality.staleSources} stale, {live.dataQuality.unavailableSources} unavailable sources.</p>}
+    {live && <p className="border-t border-slate-100 px-4 py-2.5 text-xs text-slate-500">Last updated: {new Date(live.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} · Data freshness: {live.dataQuality.liveSources} live, {live.dataQuality.staleSources} stale, {live.dataQuality.unavailableSources} unavailable sources.</p>}
   </section>;
 }
