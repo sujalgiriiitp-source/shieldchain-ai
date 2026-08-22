@@ -15,7 +15,7 @@ function markerColor(score?: number | null) {
 export default function RiskMap({ risks }: { risks: RiskScore[] | null }) {
   const byName = new Map((risks ?? []).map((risk) => [risk.corridor, risk]));
   return (
-    <div className="h-[420px] overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-sm">
+    <div className="h-[420px] overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-sm" aria-label="Global energy corridor risk map">
       <MapContainer center={[20, 55]} zoom={3} scrollWheelZoom className="h-full w-full" aria-label="Energy corridor risk map">
         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {corridors.map((corridor) => {
