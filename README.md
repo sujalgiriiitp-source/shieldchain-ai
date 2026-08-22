@@ -1,4 +1,4 @@
-<![CDATA[<div align="center">
+<div align="center">
 
 # ShieldChain AI
 
@@ -427,4 +427,4 @@ Open an issue or submit a focused pull request. Please preserve the source-statu
 ## License
 
 License information will be added before public release.
-]]>
+
