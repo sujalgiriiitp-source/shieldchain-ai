@@ -345,22 +345,42 @@ Data reliability is a core design principle. The system is built to degrade grac
 This ensures the UI always has a consistent data contract, and the user always knows the provenance and freshness of what they are seeing.
 
 ---
+## 🖥️ Product Screenshots
 
-## Screenshots
+### 01 — Executive Dashboard
+The ShieldChain AI dashboard provides a real-time view of India's crude-oil supply-chain exposure, corridor risk, market context, and source provenance.
 
-### Dashboard
-<!-- Add dashboard screenshot here -->
+![ShieldChain AI Dashboard](dashboard.png)
 
-### Scenario Analysis
-<!-- Add scenario screenshot here -->
+---
 
-### Procurement
-<!-- Add procurement screenshot here -->
+### 02 — Corridor Risk & Decision Chain
+The risk assessment layer converts observed geopolitical signals into corridor-level risk scores and traces the decision path from event detection to recommended action.
 
-### Reserve Optimizer
-<!-- Add reserve screenshot here -->
+![Corridor Risk Assessment](risk-assessment.png)
 
-> Run the application locally to capture screenshots. The live status panel intentionally displays real provider freshness rather than mocked data.
+---
+
+### 03 — Scenario Analysis
+The scenario engine allows users to replay disruptions, adjust capacity reduction and duration, and evaluate the resulting supply gap, price impact, GDP impact, and reserve pressure.
+
+![Scenario Analysis](scenario-analysis.png)
+
+---
+
+### 04 — Procurement Orchestrator
+The procurement engine translates the modeled supply gap into an indicative rerouting basket, ranking alternative sources using volume, cost premium, transit time, risk, and rationale.
+
+![Procurement Orchestrator](procurement.png)
+
+---
+
+### 05 — Strategic Reserve Optimizer
+The reserve module evaluates how strategic petroleum reserves can help absorb a modeled supply gap and visualizes the remaining exposure over time.
+
+![Strategic Reserve Optimizer](reserve.png)
+
+
 
 ---
 
